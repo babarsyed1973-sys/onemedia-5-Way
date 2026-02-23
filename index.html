@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
 <title>The 5 Ways to Grow Your Sales — onemedia</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -601,15 +602,87 @@
   .c4 { color: var(--lever4); }
   .c5 { color: var(--lever5); }
 
+  /* ── SITE NAV ── */
+  .site-nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 200;
+    background: rgba(10,10,10,0.96);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28px;
+    height: 52px;
+  }
+
+  .site-nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 16px;
+    letter-spacing: 4px;
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  .site-nav-links {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+  }
+
+  .site-nav-link {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 13px;
+    letter-spacing: 2px;
+    color: var(--text);
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    transition: color 0.2s, background 0.2s;
+    white-space: nowrap;
+  }
+
+  .site-nav-link:hover {
+    color: var(--white);
+    background: rgba(255,255,255,0.06);
+  }
+
+  .site-nav-link.current {
+    color: var(--white);
+  }
+
+  .site-nav-link.highlight {
+    color: var(--accent);
+    border: 1px solid rgba(232,68,10,0.4);
+    background: rgba(232,68,10,0.08);
+  }
+
+  .site-nav-link.highlight:hover {
+    background: rgba(232,68,10,0.15);
+  }
+
+  /* push hero down to clear fixed site nav */
+  body { padding-top: 52px; }
+
   /* ── PRINT ── */
   @media print {
-    .sticky-nav, .hero, .scroll-hint { display: none; }
-    body { background: white; color: black; }
+    .sticky-nav, .site-nav, .hero, .scroll-hint { display: none; }
+    body { background: white; color: black; padding-top: 0; }
     section { padding: 20px; }
   }
 </style>
 </head>
 <body>
+
+<!-- SITE NAV -->
+<nav class="site-nav">
+  <a class="site-nav-logo" href="index.html">ONEMEDIA</a>
+  <div class="site-nav-links">
+    <a class="site-nav-link current" href="index.html">Training Guide</a>
+    <a class="site-nav-link highlight" href="5way-explainer.html">▶ Watch Explainer</a>
+  </div>
+</nav>
 
 <!-- HERO -->
 <div class="hero" id="top">

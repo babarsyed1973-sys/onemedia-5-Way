@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>The 5 Ways — onemedia Explainer</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #080808;
+  --white: #f2ede6;
+  --dim: rgba(242,237,230,0.45);
+  --c1: #ff4d1a;
+  --c2: #ffb31a;
+  --c3: #1adf7a;
+  --c4: #1a9fff;
+  --c5: #c41aff;
+  --card: #111;
+  --border: rgba(255,255,255,0.07);
+}
+
+html, body {
+  width: 100%; height: 100%;
+  background: var(--bg);
+  color: var(--white);
+  font-family: 'Syne', sans-serif;
+  overflow: hidden;
+  user-select: none;
+}
+
+/* ── STAGE ── */
+#stage {
+  width: 100vw; height: calc(100vh - 48px);
+  margin-top: 48px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ── BACKGROUND PARTICLES ── */
+#bg-canvas {
+  position: absolute; inset: 0;
+  z-index: 0;
+  opacity: 0.35;
+}
+
+/* ── SLIDES ── */
+.slide {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 60px 40px;
+  z-index: 2;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s;
+}
+
+.slide.active { opacity: 1; pointer-events: all; }
+
+/* ── SITE NAV ── */
+#site-nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 200;
+  background: rgba(8,8,8,0.95);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 28px;
+  height: 48px;
+}
+
+#site-nav .sn-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 15px;
+  letter-spacing: 4px;
+  color: #ff4d1a;
+  text-decoration: none;
+}
+
+#site-nav .sn-links {
+  display: flex; gap: 4px;
+}
+
+#site-nav .sn-link {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: rgba(242,237,230,0.5);
+  text-decoration: none;
+  padding: 7px 14px;
+  border-radius: 4px;
+  transition: color 0.2s, background 0.2s;
+  white-space: nowrap;
+}
+
+#site-nav .sn-link:hover {
+  color: #f2ede6;
+  background: rgba(255,255,255,0.06);
+}
+
+#site-nav .sn-link.sn-highlight {
+  color: #ff4d1a;
+  border: 1px solid rgba(255,77,26,0.35);
+  background: rgba(255,77,26,0.08);
+}
+
+#site-nav .sn-link.sn-highlight:hover {
+  background: rgba(255,77,26,0.15);
+}
+
+/* ── PROGRESS BAR ── */
+#progress-bar {
+  position: fixed; top: 48px; left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--c1), var(--c2), var(--c3), var(--c4), var(--c5));
+  z-index: 100;
+  transition: width 0.6s cubic-bezier(0.4,0,0.2,1);
+}
+
+/* ── SLIDE COUNTER ── */
+#counter {
+  position: fixed; top: 64px; right: 28px;
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  color: var(--dim);
+  z-index: 100;
+  letter-spacing: 2px;
+}
+
+/* ── NAV BUTTONS ── */
+#nav {
+  position: fixed; bottom: 32px; left: 50%;
+  transform: translateX(-50%);
+  display: flex; gap: 16px; align-items: center;
+  z-index: 100;
+}
+
+.nav-btn {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid var(--border);
+  color: var(--white);
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 15px;
+  letter-spacing: 3px;
+  padding: 12px 28px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.nav-btn:hover { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.2); }
+.nav-btn:disabled { opacity: 0.2; cursor: default; }
+
+#dots {
+  display: flex; gap: 8px; align-items: center;
+}
+
+.dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.dot.active { background: var(--white); width: 20px; border-radius: 3px; }
+
+/* ── LOGO BADGE ── */
+.badge {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 11px; letter-spacing: 5px;
+  color: var(--c1); border: 1px solid var(--c1);
+  padding: 5px 18px; display: inline-block;
+  margin-bottom: 32px;
+}
+
+/* ── TYPOGRAPHY ── */
+.display {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(64px, 13vw, 160px);
+  line-height: 0.88;
+  letter-spacing: 2px;
+  text-align: center;
+}
+
+.subtitle {
+  font-size: clamp(14px, 2vw, 20px);
+  font-weight: 400;
+  color: var(--dim);
+  text-align: center;
+  max-width: 560px;
+  line-height: 1.6;
+  margin-top: 24px;
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes popIn {
+  0%   { opacity: 0; transform: scale(0.6); }
+  70%  { transform: scale(1.06); }
+  100% { opacity: 1; transform: scale(1); }
+}
+@keyframes slideLeft {
+  from { opacity: 0; transform: translateX(-60px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes countUp {
+  from { opacity: 0; transform: translateY(20px) scale(0.8); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes glow {
+  0%,100% { text-shadow: 0 0 20px currentColor; }
+  50% { text-shadow: 0 0 60px currentColor, 0 0 100px currentColor; }
+}
+@keyframes draw {
+  from { stroke-dashoffset: 1000; }
+  to   { stroke-dashoffset: 0; }
+}
+@keyframes pulse {
+  0%,100% { transform: scale(1); }
+  50% { transform: scale(1.04); }
+}
+
+.anim-fadeup   { animation: fadeUp 0.7s both; }
+.anim-fadein   { animation: fadeIn 0.7s both; }
+.anim-pop      { animation: popIn 0.6s both; }
+.anim-left     { animation: slideLeft 0.6s both; }
+
+/* delay helpers */
+.d1 { animation-delay: 0.1s; }
+.d2 { animation-delay: 0.3s; }
+.d3 { animation-delay: 0.5s; }
+.d4 { animation-delay: 0.7s; }
+.d5 { animation-delay: 0.9s; }
+.d6 { animation-delay: 1.1s; }
+.d7 { animation-delay: 1.3s; }
+
+/* ── SLIDE 0: TITLE ── */
+#s0 { }
+#s0 .display span { color: var(--c1); }
+#s0 .sub-line {
+  font-family: 'DM Mono', monospace;
+  font-size: 13px; letter-spacing: 3px;
+  color: var(--dim); margin-top: 32px;
+  text-align: center;
+}
+
+/* ── SLIDE 1: THE PROBLEM ── */
+#s1 .big-stat {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(80px, 18vw, 200px);
+  line-height: 1;
+  color: var(--c1);
+  animation: glow 3s ease-in-out infinite;
+}
+
+#s1 .problem-text {
+  font-size: clamp(18px, 3vw, 32px);
+  font-weight: 800;
+  text-align: center;
+  max-width: 700px;
+  line-height: 1.3;
+}
+
+#s1 .strike {
+  position: relative; display: inline-block;
+  color: var(--dim);
+}
+#s1 .strike::after {
+  content: '';
+  position: absolute;
+  left: 0; top: 50%;
+  width: 0; height: 2px;
+  background: var(--c1);
+  animation: strikeThrough 0.5s 1.4s forwards;
+}
+@keyframes strikeThrough {
+  to { width: 100%; }
+}
+
+/* ── SLIDE 2: THE FORMULA ── */
+#s2 .formula {
+  display: flex; align-items: center; gap: 12px;
+  flex-wrap: wrap; justify-content: center;
+  max-width: 900px;
+}
+
+.f-pill {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(18px, 3vw, 28px);
+  letter-spacing: 1px;
+  padding: 14px 22px;
+  border-radius: 6px;
+  border: 1.5px solid;
+  text-align: center;
+}
+.f-pill.p1 { color: var(--c1); border-color: var(--c1); background: rgba(255,77,26,0.1); }
+.f-pill.p2 { color: var(--c2); border-color: var(--c2); background: rgba(255,179,26,0.1); }
+.f-pill.p3 { color: var(--c3); border-color: var(--c3); background: rgba(26,223,122,0.1); }
+.f-pill.p4 { color: var(--c4); border-color: var(--c4); background: rgba(26,159,255,0.1); }
+.f-pill.p5 { color: var(--c5); border-color: var(--c5); background: rgba(196,26,255,0.1); }
+.f-pill.result {
+  color: var(--c2); border-color: var(--c2);
+  background: rgba(255,179,26,0.15);
+  font-size: clamp(22px, 3.5vw, 34px);
+  animation: pulse 2s ease-in-out infinite 1.8s;
+}
+
+.f-op {
+  font-family: 'DM Mono', monospace;
+  font-size: clamp(20px, 3vw, 32px);
+  color: var(--dim);
+}
+
+#s2 .magic {
+  margin-top: 36px;
+  font-family: 'DM Mono', monospace;
+  font-size: 13px;
+  color: var(--c2);
+  background: rgba(255,179,26,0.07);
+  border: 1px solid rgba(255,179,26,0.2);
+  padding: 14px 28px; border-radius: 4px;
+  text-align: center;
+}
+
+/* ── SLIDES 3–7: LEVER SLIDES ── */
+.lever-slide {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: center;
+  max-width: 1000px;
+  width: 100%;
+}
+
+@media (max-width: 700px) {
+  .lever-slide { grid-template-columns: 1fr; gap: 24px; }
+}
+
+.lever-left { }
+
+.lever-number {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(100px, 18vw, 180px);
+  line-height: 1;
+  opacity: 0.12;
+  position: absolute;
+  top: -20px; left: -20px;
+  pointer-events: none;
+}
+
+.lever-left-inner { position: relative; }
+
+.lever-tag {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 12px; letter-spacing: 5px;
+  margin-bottom: 12px;
+  opacity: 0.6;
+}
+
+.lever-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(48px, 7vw, 80px);
+  line-height: 0.95;
+  margin-bottom: 20px;
+}
+
+.lever-body {
+  font-size: 14px;
+  color: var(--dim);
+  line-height: 1.7;
+  font-weight: 400;
+}
+
+.lever-stat {
+  margin-top: 20px;
+  display: inline-block;
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  padding: 10px 16px;
+  border-radius: 4px;
+  border: 1px solid;
+  line-height: 1.4;
+}
+
+.lever-right {
+  display: flex; flex-direction: column; gap: 10px;
+}
+
+.action-item {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 14px 18px;
+  border-left: 3px solid;
+}
+
+.action-item .ai-label {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 11px; letter-spacing: 3px;
+  opacity: 0.5; margin-bottom: 4px;
+}
+
+.action-item .ai-text {
+  font-size: 13px; line-height: 1.5;
+  font-weight: 400;
+}
+
+/* ── SLIDE 8: MULTIPLICATION MAGIC ── */
+#s8 .math-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+  max-width: 900px;
+  width: 100%;
+  margin-bottom: 32px;
+}
+
+@media (max-width: 700px) {
+  #s8 .math-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+.math-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px 12px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.math-card::before {
+  content: ''; position: absolute;
+  top: 0; left: 0; right: 0; height: 2px;
+}
+.math-card.m1::before { background: var(--c1); }
+.math-card.m2::before { background: var(--c2); }
+.math-card.m3::before { background: var(--c3); }
+.math-card.m4::before { background: var(--c4); }
+.math-card.m5::before { background: var(--c5); }
+
+.math-card .mc-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px; letter-spacing: 2px;
+  color: var(--dim); margin-bottom: 8px;
+}
+
+.math-card .mc-val {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 28px; line-height: 1;
+}
+
+.math-card .mc-arrow {
+  font-size: 11px; color: var(--dim); margin: 4px 0;
+}
+
+.math-card .mc-improved {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px; line-height: 1;
+}
+
+.math-card.m1 .mc-improved { color: var(--c1); }
+.math-card.m2 .mc-improved { color: var(--c2); }
+.math-card.m3 .mc-improved { color: var(--c3); }
+.math-card.m4 .mc-improved { color: var(--c4); }
+.math-card.m5 .mc-improved { color: var(--c5); }
+
+#s8 .result-strip {
+  display: flex; gap: 24px; justify-content: center;
+  flex-wrap: wrap;
+}
+
+.res-box {
+  background: rgba(26,223,122,0.08);
+  border: 1px solid rgba(26,223,122,0.3);
+  border-radius: 8px;
+  padding: 20px 32px;
+  text-align: center;
+}
+
+.res-box .rb-label {
+  font-size: 11px; letter-spacing: 3px;
+  color: var(--dim); margin-bottom: 8px;
+}
+
+.res-box .rb-val {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 40px; color: var(--c3);
+}
+
+/* ── SLIDE 9: CALL TO ACTION ── */
+#s9 .cta-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  max-width: 800px;
+  width: 100%;
+  margin: 32px 0;
+}
+
+@media (max-width: 700px) {
+  #s9 .cta-grid { grid-template-columns: 1fr; }
+}
+
+.cta-lever {
+  border-radius: 6px;
+  padding: 16px 12px;
+  text-align: center;
+  border: 1px solid;
+}
+
+.cta-lever.cl1 { color: var(--c1); border-color: rgba(255,77,26,0.3); background: rgba(255,77,26,0.06); }
+.cta-lever.cl2 { color: var(--c2); border-color: rgba(255,179,26,0.3); background: rgba(255,179,26,0.06); }
+.cta-lever.cl3 { color: var(--c3); border-color: rgba(26,223,122,0.3); background: rgba(26,223,122,0.06); }
+.cta-lever.cl4 { color: var(--c4); border-color: rgba(26,159,255,0.3); background: rgba(26,159,255,0.06); }
+.cta-lever.cl5 { color: var(--c5); border-color: rgba(196,26,255,0.3); background: rgba(196,26,255,0.06); }
+
+.cta-lever .cl-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 36px; line-height: 1; margin-bottom: 6px;
+}
+
+.cta-lever .cl-name {
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 1px; opacity: 0.8;
+}
+
+#s9 .final-line {
+  font-family: 'DM Mono', monospace;
+  font-size: 13px; color: var(--c2);
+  text-align: center; max-width: 600px;
+  line-height: 1.6;
+  background: rgba(255,179,26,0.06);
+  border: 1px solid rgba(255,179,26,0.2);
+  padding: 16px 28px; border-radius: 4px;
+}
+
+#s9 .cta-link {
+  margin-top: 20px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 16px; letter-spacing: 4px;
+  color: var(--white);
+  background: var(--c1);
+  padding: 14px 40px; border-radius: 4px;
+  text-decoration: none;
+  display: inline-block;
+  transition: opacity 0.2s;
+}
+
+#s9 .cta-link:hover { opacity: 0.85; }
+
+/* ── KEYBOARD HINT ── */
+#key-hint {
+  position: fixed; bottom: 88px; right: 28px;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px; color: var(--dim);
+  letter-spacing: 1px;
+  opacity: 0;
+  animation: fadeIn 1s 2s forwards;
+}
+</style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+
+<!-- SITE NAV -->
+<nav id="site-nav">
+  <a class="sn-logo" href="index.html">ONEMEDIA</a>
+  <div class="sn-links">
+    <a class="sn-link sn-highlight" href="index.html">← Training Guide</a>
+    <a class="sn-link" href="5way-explainer.html">Explainer</a>
+  </div>
+</nav>
+
+<div id="progress-bar" style="width:0%"></div>
+<div id="counter">01 / 10</div>
+
+<div id="stage">
+
+  <!-- SLIDE 0: TITLE -->
+  <div class="slide active" id="s0">
+    <div class="badge anim-fadeup d1">ONEMEDIA SALES TRAINING</div>
+    <div class="display anim-fadeup d2">THE <span>5 WAYS</span><br>TO GROW<br>YOUR SALES</div>
+    <p class="subtitle anim-fadeup d3">How small, consistent improvements across 5 levers can transform your personal performance</p>
+    <div class="sub-line anim-fadein d5">CLICK ANYWHERE OR USE ARROW KEYS TO BEGIN →</div>
+  </div>
+
+  <!-- SLIDE 1: THE PROBLEM -->
+  <div class="slide" id="s1">
+    <div class="big-stat anim-pop d1">×1</div>
+    <div class="problem-text anim-fadeup d2">
+      Most salespeople think growth means<br>
+      <span class="strike">"just sell more"</span>
+    </div>
+    <p class="subtitle anim-fadeup d3">But there's a smarter way. Instead of trying to be dramatically better at one thing, you pull <strong style="color:var(--white)">5 smaller levers</strong> — and because they multiply each other, the combined effect is massive.</p>
+  </div>
+
+  <!-- SLIDE 2: FORMULA -->
+  <div class="slide" id="s2">
+    <div class="badge anim-fadeup d1">THE FORMULA</div>
+    <div class="formula">
+      <div class="f-pill p1 anim-pop d2">Leads</div>
+      <div class="f-op anim-fadein d2">×</div>
+      <div class="f-pill p2 anim-pop d3">Conversion</div>
+      <div class="f-op anim-fadein d3">×</div>
+      <div class="f-pill p3 anim-pop d4">Transactions</div>
+      <div class="f-op anim-fadein d4">×</div>
+      <div class="f-pill p4 anim-pop d5">Avg Sale</div>
+      <div class="f-op anim-fadein d5">×</div>
+      <div class="f-pill p5 anim-pop d6">Margin</div>
+      <div class="f-op anim-fadein d6">=</div>
+      <div class="f-pill result anim-pop d7">PROFIT</div>
+    </div>
+    <div class="magic anim-fadeup d7">
+      ✦ Improve each lever by just 10% → your profit increases by 61% — not 50%, because they MULTIPLY
+    </div>
+  </div>
+
+  <!-- SLIDE 3: LEVER 1 — LEADS -->
+  <div class="slide" id="s3">
+    <div class="lever-slide">
+      <div class="lever-left">
+        <div class="lever-left-inner">
+          <div class="lever-number" style="color:var(--c1)">1</div>
+          <div class="lever-tag" style="color:var(--c1)">LEVER 01 — anim-left d1</div>
+          <div class="lever-title anim-left d1" style="color:var(--c1)">MORE<br>LEADS</div>
+          <div class="lever-body anim-fadeup d2">More opportunities means more chances to win. But it doesn't require cold calling strangers — you likely have 230+ dormant accounts right now.</div>
+          <div class="lever-stat anim-fadeup d3" style="color:var(--c1); border-color:rgba(255,77,26,0.3); background:rgba(255,77,26,0.07)">
+            +10% = just 0.8 extra opps per month<br>across the whole year
+          </div>
+        </div>
+      </div>
+      <div class="lever-right">
+        <div class="action-item anim-fadeup d2" style="border-left-color:var(--c1)">
+          <div class="ai-label" style="color:var(--c1)">DO THIS</div>
+          <div class="ai-text">Contact 5 existing dormant accounts per week — you have 230 waiting</div>
+        </div>
+        <div class="action-item anim-fadeup d3" style="border-left-color:var(--c1)">
+          <div class="ai-label" style="color:var(--c1)">DO THIS</div>
+          <div class="ai-text">End every call with: "What projects do you have coming up in 3 months?"</div>
+        </div>
+        <div class="action-item anim-fadeup d4" style="border-left-color:var(--c1)">
+          <div class="ai-label" style="color:var(--c1)">DO THIS</div>
+          <div class="ai-text">Use every manufacturer launch as a reason to call 50 accounts</div>
+        </div>
+        <div class="action-item anim-fadeup d5" style="border-left-color:var(--c1)">
+          <div class="ai-label" style="color:var(--c1)">DO THIS</div>
+          <div class="ai-text">Build a monthly call plan: top 30 accounts, every one touched each month</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: LEVER 2 — CONVERSION -->
+  <div class="slide" id="s4">
+    <div class="lever-slide">
+      <div class="lever-left">
+        <div class="lever-left-inner">
+          <div class="lever-number" style="color:var(--c2)">2</div>
+          <div class="lever-tag" style="color:var(--c2)">LEVER 02</div>
+          <div class="lever-title anim-left d1" style="color:var(--c2)">BETTER<br>CONVERSION</div>
+          <div class="lever-body anim-fadeup d2">Win more of the deals you already quote. We have 2,308 opps stuck at "Quoted" — many go cold because nobody follows up.</div>
+          <div class="lever-stat anim-fadeup d3" style="color:var(--c2); border-color:rgba(255,179,26,0.3); background:rgba(255,179,26,0.07)">
+            Win rate: 49.5% by count<br>but only 14.3% by value — fix the big deals
+          </div>
+        </div>
+      </div>
+      <div class="lever-right">
+        <div class="action-item anim-fadeup d2" style="border-left-color:var(--c2)">
+          <div class="ai-label" style="color:var(--c2)">DO THIS</div>
+          <div class="ai-text">Follow up every quote within 48 hours — if you quoted it, chase it</div>
+        </div>
+        <div class="action-item anim-fadeup d3" style="border-left-color:var(--c2)">
+          <div class="ai-label" style="color:var(--c2)">DO THIS</div>
+          <div class="ai-text">Qualify before quoting: Budget? Timeline? Decision-maker? Don't waste effort on dead leads</div>
+        </div>
+        <div class="action-item anim-fadeup d4" style="border-left-color:var(--c2)">
+          <div class="ai-label" style="color:var(--c2)">DO THIS</div>
+          <div class="ai-text">Review your last 5 losses — write the reason down, find the pattern</div>
+        </div>
+        <div class="action-item anim-fadeup d5" style="border-left-color:var(--c2)">
+          <div class="ai-label" style="color:var(--c2)">DO THIS</div>
+          <div class="ai-text">Speed wins: same-day quotes on standard products. Be the fastest response</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: LEVER 3 — TRANSACTIONS -->
+  <div class="slide" id="s5">
+    <div class="lever-slide">
+      <div class="lever-left">
+        <div class="lever-left-inner">
+          <div class="lever-number" style="color:var(--c3)">3</div>
+          <div class="lever-tag" style="color:var(--c3)">LEVER 03</div>
+          <div class="lever-title anim-left d1" style="color:var(--c3)">MORE<br>TRANSACTIONS</div>
+          <div class="lever-body anim-fadeup d2">Get each account ordering more often. Most accounts buy only 1–2 of our 12+ manufacturer lines — every new line is another transaction.</div>
+          <div class="lever-stat anim-fadeup d3" style="color:var(--c3); border-color:rgba(26,223,122,0.3); background:rgba(26,223,122,0.07)">
+            1,250 opps at "Pre-Stage Renewal"<br>waiting to be captured
+          </div>
+        </div>
+      </div>
+      <div class="lever-right">
+        <div class="action-item anim-fadeup d2" style="border-left-color:var(--c3)">
+          <div class="ai-label" style="color:var(--c3)">DO THIS</div>
+          <div class="ai-text">Cross-sell: if they buy ONELAN, have you shown them MediaStar? Reserva? Datapath?</div>
+        </div>
+        <div class="action-item anim-fadeup d3" style="border-left-color:var(--c3)">
+          <div class="ai-label" style="color:var(--c3)">DO THIS</div>
+          <div class="ai-text">Own your renewals — flag licences due in 90 days and call before expiry, not after</div>
+        </div>
+        <div class="action-item anim-fadeup d4" style="border-left-color:var(--c3)">
+          <div class="ai-label" style="color:var(--c3)">DO THIS</div>
+          <div class="ai-text">30-day post-delivery check-in: "How did it go? What's the next project on site?"</div>
+        </div>
+        <div class="action-item anim-fadeup d5" style="border-left-color:var(--c3)">
+          <div class="ai-label" style="color:var(--c3)">DO THIS</div>
+          <div class="ai-text">Share project wins: "We just did a video wall for [X] — is that something your clients need?"</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: LEVER 4 — AVG SALE -->
+  <div class="slide" id="s6">
+    <div class="lever-slide">
+      <div class="lever-left">
+        <div class="lever-left-inner">
+          <div class="lever-number" style="color:var(--c4)">4</div>
+          <div class="lever-tag" style="color:var(--c4)">LEVER 04</div>
+          <div class="lever-title anim-left d1" style="color:var(--c4)">BIGGER<br>DEAL SIZE</div>
+          <div class="lever-body anim-fadeup d2">Our median deal is £1,851 but average is £5,934. Bundling and solution-selling lifts every deal closer to the average.</div>
+          <div class="lever-stat anim-fadeup d3" style="color:var(--c4); border-color:rgba(26,159,255,0.3); background:rgba(26,159,255,0.07)">
+            +£500 per deal — one extra product line<br>or services add-on
+          </div>
+        </div>
+      </div>
+      <div class="lever-right">
+        <div class="action-item anim-fadeup d2" style="border-left-color:var(--c4)">
+          <div class="ai-label" style="color:var(--c4)">DO THIS</div>
+          <div class="ai-text">Bundle the solution: display + processor + mount + software + installation in one quote</div>
+        </div>
+        <div class="action-item anim-fadeup d3" style="border-left-color:var(--c4)">
+          <div class="ai-label" style="color:var(--c4)">DO THIS</div>
+          <div class="ai-text">Always add the onemedia services line — installation, commissioning, extended warranty</div>
+        </div>
+        <div class="action-item anim-fadeup d4" style="border-left-color:var(--c4)">
+          <div class="ai-label" style="color:var(--c4)">DO THIS</div>
+          <div class="ai-text">Show the "next step up": if they want 1 display, show how 3 work as a video wall</div>
+        </div>
+        <div class="action-item anim-fadeup d5" style="border-left-color:var(--c4)">
+          <div class="ai-label" style="color:var(--c4)">DO THIS</div>
+          <div class="ai-text">Understand the full project — not just the product they asked about</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 7: LEVER 5 — MARGIN -->
+  <div class="slide" id="s7">
+    <div class="lever-slide">
+      <div class="lever-left">
+        <div class="lever-left-inner">
+          <div class="lever-number" style="color:var(--c5)">5</div>
+          <div class="lever-tag" style="color:var(--c5)">LEVER 05</div>
+          <div class="lever-title anim-left d1" style="color:var(--c5)">PROTECT<br>MARGIN</div>
+          <div class="lever-body anim-fadeup d2">Don't give away what you've earned. We had 114 credit notes totalling -£222K last year. Every 1% discount comes straight off the bottom line.</div>
+          <div class="lever-stat anim-fadeup d3" style="color:var(--c5); border-color:rgba(196,26,255,0.3); background:rgba(196,26,255,0.07)">
+            £10K deal at 20% = £2,000 profit<br>at 18% = £1,800. That £200 is gone forever
+          </div>
+        </div>
+      </div>
+      <div class="lever-right">
+        <div class="action-item anim-fadeup d2" style="border-left-color:var(--c5)">
+          <div class="ai-label" style="color:var(--c5)">DO THIS</div>
+          <div class="ai-text">Lead with availability, expertise and support — not price</div>
+        </div>
+        <div class="action-item anim-fadeup d3" style="border-left-color:var(--c5)">
+          <div class="ai-label" style="color:var(--c5)">DO THIS</div>
+          <div class="ai-text">Never discount without getting something back: volume, commitment, or a case study</div>
+        </div>
+        <div class="action-item anim-fadeup d4" style="border-left-color:var(--c5)">
+          <div class="ai-label" style="color:var(--c5)">DO THIS</div>
+          <div class="ai-text">Check your buy price before quoting — are you on the best manufacturer tier?</div>
+        </div>
+        <div class="action-item anim-fadeup d5" style="border-left-color:var(--c5)">
+          <div class="ai-label" style="color:var(--c5)">DO THIS</div>
+          <div class="ai-text">Get orders right first time — every credit note and return destroys margin directly</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: THE MATHS -->
+  <div class="slide" id="s8">
+    <div class="badge anim-fadeup d1">THE MULTIPLICATION EFFECT</div>
+    <div class="display anim-fadeup d2" style="font-size: clamp(36px,6vw,72px); margin-bottom:28px;">10% better at 5 things = <span style="color:var(--c3)">61% more profit</span></div>
+
+    <div class="math-grid">
+      <div class="math-card m1 anim-pop d2">
+        <div class="mc-label">LEADS</div>
+        <div class="mc-val">100</div>
+        <div class="mc-arrow">↓ +10%</div>
+        <div class="mc-improved">110</div>
+      </div>
+      <div class="math-card m2 anim-pop d3">
+        <div class="mc-label">CONVERSION</div>
+        <div class="mc-val">55%</div>
+        <div class="mc-arrow">↓ +10%</div>
+        <div class="mc-improved">60.5%</div>
+      </div>
+      <div class="math-card m3 anim-pop d4">
+        <div class="mc-label">TRANSACTIONS</div>
+        <div class="mc-val">3.9</div>
+        <div class="mc-arrow">↓ +10%</div>
+        <div class="mc-improved">4.29</div>
+      </div>
+      <div class="math-card m4 anim-pop d5">
+        <div class="mc-label">AVG SALE</div>
+        <div class="mc-val">£5,000</div>
+        <div class="mc-arrow">↓ +10%</div>
+        <div class="mc-improved">£5,500</div>
+      </div>
+      <div class="math-card m5 anim-pop d6">
+        <div class="mc-label">MARGIN</div>
+        <div class="mc-val">25%</div>
+        <div class="mc-arrow">↓ +10%</div>
+        <div class="mc-improved">27.5%</div>
+      </div>
+    </div>
+
+    <div class="result-strip">
+      <div class="res-box anim-fadeup d6">
+        <div class="rb-label">EXTRA REVENUE</div>
+        <div class="rb-val">+£656K</div>
+      </div>
+      <div class="res-box anim-fadeup d7">
+        <div class="rb-label">EXTRA PROFIT</div>
+        <div class="rb-val">+£169K</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 9: CTA -->
+  <div class="slide" id="s9">
+    <div class="badge anim-fadeup d1">YOUR NEXT STEP</div>
+    <div class="display anim-fadeup d2" style="font-size:clamp(44px,8vw,100px);">YOU DON'T NEED<br>TO BE <span style="color:var(--c1)">61%</span> BETTER</div>
+    <p class="subtitle anim-fadeup d3">You just need to be <strong style="color:var(--white)">10% better at 5 things.</strong></p>
+
+    <div class="cta-grid">
+      <div class="cta-lever cl1 anim-pop d2">
+        <div class="cl-num">01</div>
+        <div class="cl-name">More Leads</div>
+      </div>
+      <div class="cta-lever cl2 anim-pop d3">
+        <div class="cl-num">02</div>
+        <div class="cl-name">Better Conversion</div>
+      </div>
+      <div class="cta-lever cl3 anim-pop d4">
+        <div class="cl-num">03</div>
+        <div class="cl-name">More Transactions</div>
+      </div>
+      <div class="cta-lever cl4 anim-pop d5">
+        <div class="cl-num">04</div>
+        <div class="cl-name">Bigger Deals</div>
+      </div>
+      <div class="cta-lever cl5 anim-pop d6">
+        <div class="cl-num">05</div>
+        <div class="cl-name">Protect Margin</div>
+      </div>
+    </div>
+
+    <div class="final-line anim-fadeup d6">
+      Pick ONE action from each lever. Write it down. Commit to it this month.<br>
+      Small improvements × 5 levers = a transformed sales performance.
+    </div>
+  </div>
+
+</div><!-- /stage -->
+
+<!-- NAVIGATION -->
+<div id="nav">
+  <button class="nav-btn" id="btn-prev" onclick="prevSlide()" disabled>← PREV</button>
+  <div id="dots"></div>
+  <button class="nav-btn" id="btn-next" onclick="nextSlide()">NEXT →</button>
+</div>
+
+<div id="key-hint">← → ARROW KEYS · SPACE</div>
+
+<script>
+// ── SLIDES ──
+const TOTAL = 10;
+let current = 0;
+
+const slides  = document.querySelectorAll('.slide');
+const dotsCtr = document.getElementById('dots');
+const counter = document.getElementById('counter');
+const progBar = document.getElementById('progress-bar');
+const btnPrev = document.getElementById('btn-prev');
+const btnNext = document.getElementById('btn-next');
+
+// Build dots
+for (let i = 0; i < TOTAL; i++) {
+  const d = document.createElement('div');
+  d.className = 'dot' + (i === 0 ? ' active' : '');
+  d.onclick = () => goTo(i);
+  dotsCtr.appendChild(d);
+}
+
+function goTo(n) {
+  slides[current].classList.remove('active');
+  // Reset animations by re-inserting
+  slides[n].classList.add('active');
+  // Restart animations
+  slides[n].querySelectorAll('[class*="anim-"]').forEach(el => {
+    el.style.animation = 'none';
+    el.offsetHeight; // reflow
+    el.style.animation = '';
+  });
+  current = n;
+  updateUI();
+}
+
+function nextSlide() { if (current < TOTAL - 1) goTo(current + 1); }
+function prevSlide() { if (current > 0) goTo(current - 1); }
+
+function updateUI() {
+  document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === current));
+  counter.textContent = String(current + 1).padStart(2, '0') + ' / ' + String(TOTAL).padStart(2, '0');
+  progBar.style.width = ((current + 1) / TOTAL * 100) + '%';
+  btnPrev.disabled = current === 0;
+  btnNext.disabled = current === TOTAL - 1;
+}
+
+// Keyboard & click
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+  if (e.key === 'ArrowLeft') prevSlide();
+});
+
+document.getElementById('stage').addEventListener('click', e => {
+  if (!e.target.closest('#nav') && !e.target.closest('button')) nextSlide();
+});
+
+// Touch swipe
+let touchX = null;
+document.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; });
+document.addEventListener('touchend', e => {
+  if (touchX === null) return;
+  const dx = e.changedTouches[0].clientX - touchX;
+  if (Math.abs(dx) > 40) { dx < 0 ? nextSlide() : prevSlide(); }
+  touchX = null;
+});
+
+// ── PARTICLE BACKGROUND ──
+const canvas = document.getElementById('bg-canvas');
+const ctx = canvas.getContext('2d');
+let W, H, particles = [];
+
+const COLORS = ['#ff4d1a','#ffb31a','#1adf7a','#1a9fff','#c41aff'];
+
+function resize() {
+  W = canvas.width  = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+
+function initParticles() {
+  particles = [];
+  for (let i = 0; i < 60; i++) {
+    particles.push({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      r: Math.random() * 2 + 0.5,
+      vx: (Math.random() - 0.5) * 0.4,
+      vy: (Math.random() - 0.5) * 0.4,
+      color: COLORS[Math.floor(Math.random() * COLORS.length)],
+      alpha: Math.random() * 0.6 + 0.2
+    });
+  }
+}
+
+function drawParticles() {
+  ctx.clearRect(0, 0, W, H);
+  particles.forEach(p => {
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    ctx.fillStyle = p.color;
+    ctx.globalAlpha = p.alpha;
+    ctx.fill();
+    p.x += p.vx; p.y += p.vy;
+    if (p.x < 0) p.x = W; if (p.x > W) p.x = 0;
+    if (p.y < 0) p.y = H; if (p.y > H) p.y = 0;
+  });
+  ctx.globalAlpha = 1;
+  requestAnimationFrame(drawParticles);
+}
+
+window.addEventListener('resize', () => { resize(); initParticles(); });
+resize(); initParticles(); drawParticles();
+
+updateUI();
+</script>
+</body>
+</html>
