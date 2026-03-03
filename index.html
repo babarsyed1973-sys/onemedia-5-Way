@@ -147,11 +147,18 @@
     section{padding:20px;}
     .commit-section,.maths-section{background:white!important;}
     .commit-row{background:white!important;border:1px solid #ddd!important;}
-    .commit-input{background:white!important;color:black!important;border:1px solid #bbb!important;height:auto!important;}
     .commit-lever-label{color:black!important;}
     label{color:#555!important;}
     .section-title{color:black!important;}
     .action-card{background:white!important;border:1px solid #ddd!important;}
+    textarea.commit-input{display:none!important;}
+    .print-div{
+      background:white!important;color:black!important;
+      border:1px solid #bbb!important;border-radius:4px;
+      padding:10px 14px;font-family:'DM Sans',sans-serif;font-size:14px;
+      line-height:1.5;white-space:pre-wrap;word-break:break-word;
+      min-height:48px;width:100%;box-sizing:border-box;display:block;
+    }
   }
 </style>
 </head>
@@ -412,8 +419,21 @@
     setTimeout(function(){t.classList.remove('show');},4000);
   }
 
-  // PRINT
-  function printCommitment(){window.print();}
+  // PRINT -- swap textareas for plain divs so content isn't clipped
+  function printCommitment(){
+    var textareas = document.querySelectorAll('textarea.commit-input');
+    var clones = [];
+    textareas.forEach(function(ta){
+      var div = document.createElement('div');
+      div.className = 'print-div';
+      div.textContent = ta.value || ta.placeholder;
+      div.style.color = ta.value ? 'black' : '#999';
+      ta.parentNode.insertBefore(div, ta.nextSibling);
+      clones.push(div);
+    });
+    window.print();
+    clones.forEach(function(d){d.parentNode.removeChild(d);});
+  }
 
   // SUBMIT TO GOOGLE SHEET
   var SHEET_URL='https://script.google.com/macros/s/AKfycbwgPcGVu03nljpR3eYP6zJe9y3Xpa3l5NeonAs7jszugN1GJQkcKV1Ga1KKJ4Zk20a4/exec';
